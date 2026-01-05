@@ -1,0 +1,11 @@
+# common
+node_modules
+.env
+dist
+build
+
+# logs
+*.log
+
+# OS
+.DS_Store
