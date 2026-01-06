@@ -41,6 +41,7 @@ interface Experience {
   ctc?: string;
   joiningDate?: Date;
   leavingDate?: Date;
+  duration?: string;
   technologies?: string[];
   description?: string;
 }
@@ -152,6 +153,7 @@ const CVSchema = new Schema<ICV>(
           ctc: String,
           joiningDate: Date,
           leavingDate: Date,
+      duration: String,
           technologies: [String],
           description: String,
         },

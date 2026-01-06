@@ -13,7 +13,6 @@ import { HTTP_STATUS, ERROR_CODES } from '../utils/constants';
  */
 export const notFoundHandler = (req: Request, res: Response<ApiResponse>): void => {
   const response: ApiResponse = {
-    statusCode: HTTP_STATUS.NOT_FOUND,
     success: false,
     error: {
       code: ERROR_CODES.NOT_FOUND,

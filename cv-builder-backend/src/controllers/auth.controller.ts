@@ -33,7 +33,6 @@ export const register = async (
     });
 
     const response: ApiResponse = {
-      statusCode: HTTP_STATUS.CREATED,
       success: true,
       data: {
         user,
@@ -64,21 +63,14 @@ export const login = async (
     const { user, accessToken, refreshToken } = await authService.login(identifier, password);
 
     // Set refresh token as HttpOnly cookie
-    res.cookie('accessToken', accessToken, {
-      httpOnly: true,
-      sameSite: 'strict',
-      maxAge: 30 * 60 * 1000, // 30 minutes
-    });
-
-
     res.cookie('refreshToken', refreshToken, {
       httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
       sameSite: 'strict',
       maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
     });
 
     const response: ApiResponse = {
-      statusCode: HTTP_STATUS.CREATED,
       success: true,
       data: {
         user,
@@ -122,7 +114,6 @@ export const refresh = async (
     });
 
     const response: ApiResponse = {
-      statusCode: HTTP_STATUS.CREATED,
       success: true,
       data: {
         accessToken,
@@ -159,7 +150,6 @@ export const logout = async (
     res.clearCookie('refreshToken');
 
     const response: ApiResponse = {
-      statusCode: HTTP_STATUS.CREATED,
       success: true,
       data: { message: 'Logged out successfully' },
     };
@@ -184,7 +174,6 @@ export const oauth = (
   try {
     // OAuth implementation will be added later
     const response: ApiResponse = {
-      statusCode: HTTP_STATUS.NOT_FOUND,
       success: false,
       error: {
         code: 'NOT_IMPLEMENTED',

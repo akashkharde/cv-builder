@@ -26,9 +26,9 @@ export class TemplateRepository {
    */
   async findPublic(params: PaginationParams = {}): Promise<PaginatedResponse<ITemplate>> {
     const limit = Math.min(params.limit || DEFAULT_PAGINATION.LIMIT, DEFAULT_PAGINATION.MAX_LIMIT);
-    
-    const query: { public: boolean; _id?: { $lt: string } } = {
-      public: true,
+
+    const query: { isActive: boolean; public?: boolean; _id?: { $lt: string } } = {
+      isActive: true,
     };
 
     if (params.cursor) {

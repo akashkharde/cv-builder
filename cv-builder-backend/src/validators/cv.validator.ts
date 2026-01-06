@@ -41,6 +41,7 @@ const experienceEntrySchema = Joi.object({
   ctc: Joi.string().max(50).optional().allow(''),
   joiningDate: Joi.date().optional(),
   leavingDate: Joi.date().optional(),
+  duration: Joi.string().max(50).optional().allow(''),
   technologies: Joi.array().items(Joi.string()).optional(),
   description: Joi.string().max(1000).optional().allow(''),
 });

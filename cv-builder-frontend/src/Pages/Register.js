@@ -4,7 +4,7 @@ import { TextField, Button, Typography, Alert } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { registerUser } from "../Redux/features/auth/authThunks";
 import { resetAuthState } from "../Redux/slices/authSlice";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function Register() {
   const navigate = useNavigate();
@@ -17,7 +17,6 @@ export default function Register() {
     watch,
     trigger,
     formState: { errors, touchedFields },
-    reset,
   } = useForm({
     mode: "onChange",
     reValidateMode: "onChange",
@@ -157,6 +156,17 @@ export default function Register() {
             {loading ? "Creating account..." : "Register"}
           </Button>
         </form>
+        <Typography variant="body2" align="center" className="mt-4">
+          Don&apos;t have an account?{" "}
+          <Button
+            component={Link}
+            to="/login"
+            variant="text"
+            size="small"
+          >
+            Login
+          </Button>
+        </Typography>
       </div>
     </div>
   );

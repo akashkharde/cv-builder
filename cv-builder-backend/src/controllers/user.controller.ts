@@ -24,7 +24,6 @@ export const getProfile = async (
     const user = await userService.getProfile(req.user!.userId);
 
     const response: ApiResponse = {
-      statusCode: HTTP_STATUS.OK,
       success: true,
       data: { user },
     };
@@ -50,8 +49,6 @@ export const updateProfile = async (
     const user = await userService.updateProfile(req.user!.userId, req.body);
 
     const response: ApiResponse = {
-      statusCode: HTTP_STATUS.OK,
-
       success: true,
       data: { user },
     };
@@ -76,7 +73,6 @@ export const getAvatarPresignUrl = async (
   try {
     // Placeholder - will implement S3 presigned URL later
     const response: ApiResponse = {
-      statusCode: HTTP_STATUS.NOT_FOUND,
       success: false,
       error: {
         code: 'NOT_IMPLEMENTED',

@@ -29,7 +29,6 @@ export const getCVs = async (
     const result: PaginatedResponse<ICV> = await cvService.getCVs(req.user!.userId, { cursor, limit });
 
     const response: ApiResponse = {
-      statusCode: HTTP_STATUS.OK,
       success: true,
       data: result,
     };
@@ -55,7 +54,6 @@ export const getCVById = async (
     const cv: ICV = await cvService.getCVById(req.params.id, req.user!.userId);
 
     const response: ApiResponse = {
-            statusCode: HTTP_STATUS.OK,
       success: true,
       data: { cv },
     };
@@ -86,7 +84,6 @@ export const createCV = async (
     });
 
     const response: ApiResponse = {
-      statusCode: HTTP_STATUS.CREATED,
       success: true,
       data: { cv },
     };
@@ -119,7 +116,6 @@ export const updateCV = async (
     const cv: ICV = await cvService.updateCV(req.params.id, req.user!.userId, updateData);
 
     const response: ApiResponse = {
-            statusCode: HTTP_STATUS.OK,
       success: true,
       data: { cv },
     };
@@ -147,7 +143,6 @@ export const autosaveCV = async (
     const cv: ICV = await cvService.autosaveCV(req.params.id, req.user!.userId, data);
 
     const response: ApiResponse = {
-            statusCode: HTTP_STATUS.OK,
       success: true,
       data: { cv },
     };
@@ -173,7 +168,6 @@ export const deleteCV = async (
     await cvService.deleteCV(req.params.id, req.user!.userId);
 
     const response: ApiResponse = {
-      statusCode: HTTP_STATUS.OK,
       success: true,
       data: { message: 'CV deleted successfully' },
     };
@@ -199,7 +193,6 @@ export const duplicateCV = async (
     const cv: ICV = await cvService.duplicateCV(req.params.id, req.user!.userId);
 
     const response: ApiResponse = {
-      statusCode: HTTP_STATUS.CREATED,
       success: true,
       data: { cv },
     };

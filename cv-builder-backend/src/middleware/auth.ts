@@ -19,13 +19,17 @@ export const authenticate = (
   next: NextFunction
 ): void => {
   try {
-    const token = req.cookies?.accessToken as string | undefined;
-    if (!token) {
+    const authHeader = req.headers.authorization;
+
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
       throw new AuthenticationError('No token provided');
     }
 
+    const token = authHeader.substring(7); // Remove 'Bearer ' prefix
+
     const decoded = verifyToken(token);
 
+    // Attach user info to request
     (req as AuthRequest).user = {
       userId: decoded.userId,
       email: decoded.email,
@@ -33,8 +37,13 @@ export const authenticate = (
     };
 
     next();
-  } catch {
-    next(new AuthenticationError('Invalid or expired token'));
+  } catch (error) {
+    console.error('Authentication error:', error);
+    if (error instanceof Error && error.message.includes('token')) {
+      next(new AuthenticationError('Invalid or expired token'));
+    } else {
+      next(error);
+    }
   }
 };
 

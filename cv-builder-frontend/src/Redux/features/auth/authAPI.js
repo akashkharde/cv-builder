@@ -15,3 +15,8 @@ export const getMeAPI = async () => {
   const response = await axiosInstance.get(API_ENDPOINTS.USERS.ME);
   return response.data;
 };
+
+export const logoutAPI = async () => {
+  const response = await axiosInstance.post(API_ENDPOINTS.AUTH.LOGOUT);
+  return response.data;
+};

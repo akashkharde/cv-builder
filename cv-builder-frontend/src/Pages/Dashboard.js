@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Button,
   Card,
@@ -7,6 +7,8 @@ import {
   Typography,
   IconButton,
   Chip,
+  CircularProgress,
+  Alert,
 } from "@mui/material";
 
 import EditIcon from "@mui/icons-material/Edit";
@@ -16,41 +18,9 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 
 import { useNavigate } from "react-router-dom";
 import Navbar from "./Navbar";
-
-/**
- * TEMP data – replace with API response
- */
-const mockCVs = [
-  {
-    _id: "695b69d6c4bd9cdab8f92d23",
-    name: "Classic",
-    slug: "classic",
-    description: "A classic two-column CV layout with profile on left.",
-    previewImageUrl: "/assets/templates/classic.png",
-    layoutStructure: { columns: 2, left: ["basicDetails", "skills"], right: ["education", "experience", "projects"] },
-    defaultTheme: {
-      fontFamily: "Inter",
-      fontSizes: { heading: 18, body: 14 },
-      colors: { primary: "#2563eb", text: "#111827", background: "#ffffff" },
-      spacing: { sectionGap: 12 },
-    },
-    isPremium: false,
-    tags: ["classic", "two-column", "professional"],
-    assets: [],
-    isActive: true,
-    versions: [
-      {
-        versionNumber: 1,
-        layoutStructure: { columns: 2, left: ["basicDetails", "skills"], right: ["education", "experience", "projects"] },
-        defaultTheme: { fontFamily: "Inter", fontSizes: { heading: 18, body: 14 }, colors: { primary: "#2563eb", text: "#111827", background: "#ffffff" } },
-        previewImageUrl: "/assets/templates/classic.png",
-        createdAt: { date: "2026-01-05T07:35:50.032Z" },
-      },
-    ],
-    createdAt: { date: "2026-01-05T07:35:50.032Z" },
-    updatedAt: { date: "2026-01-05T07:35:50.032Z" },
-  },
-];
+import { useDispatch, useSelector } from "react-redux";
+import { fetchCVs, deleteCV } from "../Redux/features/cv/cvThunks";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 /**
  * Extracts a usable ISO/string date from several possible shapes the backend may return.
@@ -85,6 +55,13 @@ const formatDate = (raw) => {
 
 const Dashboard = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { cvs, loading, error } = useSelector((state) => state.cv);
+
+
+  useEffect(() => {
+    dispatch(fetchCVs());
+  }, [dispatch]);
 
   const handleEdit = (id) => {
     if (!id) return;
@@ -106,6 +83,12 @@ const Dashboard = () => {
     alert(`Payment required to share CV: ${id}`);
   };
 
+  const handleDelete = (id) => {
+    if (window.confirm("Are you sure you want to delete this CV?")) {
+      dispatch(deleteCV(id));
+    }
+  };
+
   return (
     <>
       <Navbar />
@@ -114,95 +97,117 @@ const Dashboard = () => {
         {/* Header */}
         <div className="flex justify-between items-center mb-6">
           <Typography variant="h5">My CVs</Typography>
-          <Button variant="contained" onClick={() => navigate("/editor/new")}>
+          <Button variant="contained" onClick={() => navigate("/templates")}>
             Create New CV
           </Button>
         </div>
 
-        {/* Empty state */}
-        {mockCVs.length === 0 && (
-          <div className="text-center mt-20">
-            <Typography variant="h6" color="text.secondary">
-              No CVs created yet
-            </Typography>
-            <Button variant="contained" className="mt-4" onClick={() => navigate("/editor/new")}>
-              Create Your First CV
-            </Button>
-          </div>
+        {error && (
+          <Alert severity="error" className="mb-4">{error}</Alert>
         )}
 
-        {/* CV List */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {mockCVs.map((cv) => {
-            const id = cv._id || cv.id;
-            const title = cv.name || cv.title || "Untitled CV";
-            // Prefer updatedAt, fallback to versions' latest createdAt, fallback to createdAt
-            const updatedRaw =
-              cv.updatedAt ||
-              (Array.isArray(cv.versions) && cv.versions.length ? cv.versions[cv.versions.length - 1].createdAt : null) ||
-              cv.createdAt;
-            const updatedAt = formatDate(updatedRaw);
+        {loading ? (
+          <div className="flex justify-center mt-20">
+            <CircularProgress />
+          </div>
+        ) : (
+          <>
+            {/* Empty state */}
+            {cvs.length === 0 && !error && (
+              <div className="text-center mt-20">
+                <Typography variant="h6" color="text.secondary">
+                  No CVs created yet
+                </Typography>
+                <Button variant="contained" className="mt-4" onClick={() => navigate("/templates")}>
+                  Create Your First CV
+                </Button>
+              </div>
+            )}
 
-            return (
-              <Card key={id} className="shadow-md">
-                {/* preview image (if present) */}
-                {cv.previewImageUrl && (
-                  <div className="w-full h-40 overflow-hidden rounded-t-md">
-                    <img
-                      src={cv.previewImageUrl}
-                      alt={`${title} preview`}
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                )}
+            {/* CV List */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {cvs.map((cv) => {
+                const id = cv._id || cv.id;
+                const title = cv.name || cv.title || "Untitled CV";
+                // Prefer updatedAt, fallback to versions' latest createdAt, fallback to createdAt
+                const updatedRaw =
+                  cv.updatedAt ||
+                  (Array.isArray(cv.versions) && cv.versions.length ? cv.versions[cv.versions.length - 1].createdAt : null) ||
+                  cv.createdAt;
+                const updatedAt = formatDate(updatedRaw);
 
-                <CardContent>
-                  <Typography variant="h6" className="mb-1">
-                    {title}
-                  </Typography>
+                return (
+                  <Card key={id} className="shadow-md">
+                    {/* preview image (if present) */}
+                    {cv.previewImageUrl ? (
+                      <div className="w-full h-40 overflow-hidden rounded-t-md">
+                        <img
+                          src={cv.previewImageUrl}
+                          alt={`${title} preview`}
+                          className="w-full h-full object-cover"
+                          onError={(e) => { e.target.style.display = 'none' }} // Fallback: hide if broken
+                        />
+                      </div>
+                    ) : (
+                      // Optional: Add a placeholder block if no image
+                      <div className="w-full h-40 bg-gray-200 flex items-center justify-center rounded-t-md">
+                        <span className="text-gray-400">No Preview</span>
+                      </div>
+                    )}
 
-                  {cv.description && (
-                    <Typography variant="body2" color="text.secondary" className="mb-2">
-                      {cv.description}
-                    </Typography>
-                  )}
+                    <CardContent>
+                      <Typography variant="h6" className="mb-1">
+                        {title}
+                      </Typography>
 
-                  <div className="flex flex-wrap gap-2 mb-2">
-                    {(cv.tags || []).slice(0, 5).map((t) => (
-                      <Chip key={t} label={t} size="small" />
-                    ))}
-                  </div>
+                      {cv.description && (
+                        <Typography variant="body2" color="text.secondary" className="mb-2">
+                          {cv.description}
+                        </Typography>
+                      )}
 
-                  <Typography variant="body2" color="text.secondary">
-                    Last updated: {updatedAt}
-                  </Typography>
-                </CardContent>
+                      <div className="flex flex-wrap gap-2 mb-2">
+                        {(cv.tags || []).slice(0, 5).map((t) => (
+                          <Chip key={t} label={t} size="small" />
+                        ))}
+                      </div>
 
-                <CardActions className="flex justify-between">
-                  <div>
-                    <IconButton onClick={() => handlePreview(id)} aria-label="preview">
-                      <VisibilityIcon />
-                    </IconButton>
+                      <Typography variant="body2" color="text.secondary">
+                        Last updated: {updatedAt}
+                      </Typography>
+                    </CardContent>
 
-                    <IconButton onClick={() => handleEdit(id)} aria-label="edit">
-                      <EditIcon />
-                    </IconButton>
-                  </div>
+                    <CardActions className="flex justify-between">
+                      <div>
+                        <IconButton onClick={() => handlePreview(id)} aria-label="preview">
+                          <VisibilityIcon />
+                        </IconButton>
 
-                  <div>
-                    <IconButton onClick={() => handleDownload(id)} aria-label="download">
-                      <PictureAsPdfIcon />
-                    </IconButton>
+                        <IconButton onClick={() => handleEdit(id)} aria-label="edit">
+                          <EditIcon />
+                        </IconButton>
+                      </div>
 
-                    <IconButton onClick={() => handleShare(id)} aria-label="share">
-                      <ShareIcon />
-                    </IconButton>
-                  </div>
-                </CardActions>
-              </Card>
-            );
-          })}
-        </div>
+                      <div>
+                        <IconButton onClick={() => handleDownload(id)} aria-label="download">
+                          <PictureAsPdfIcon />
+                        </IconButton>
+
+                        <IconButton onClick={() => handleShare(id)} aria-label="share">
+                          <ShareIcon />
+                        </IconButton>
+
+                        <IconButton onClick={() => handleDelete(id)} aria-label="delete" color="error">
+                          <DeleteIcon />
+                        </IconButton>
+                      </div>
+                    </CardActions>
+                  </Card>
+                );
+              })}
+            </div>
+          </>
+        )}
       </div>
     </>
   );

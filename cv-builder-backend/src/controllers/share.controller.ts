@@ -30,10 +30,9 @@ export const createShareLink = async (
 
     const response: ApiResponse = {
       success: true,
-            statusCode: HTTP_STATUS.CREATED,
       data: {
         token: shareLink.token,
-        shareUrl: `${process.env.FRONTEND_URL || 'http://localhost:3000'}/share/${shareLink.token}`,
+        shareUrl: `${process.env.FRONTEND_URL || 'http://localhost:3001'}/share/${shareLink.token}`,
         expiresAt: shareLink.expiresAt,
       },
     };
@@ -59,7 +58,6 @@ export const getCVByToken = async (
     const shareLink: IShareLink = await shareService.getCVByToken(req.params.token);
 
     const response: ApiResponse = {
-            statusCode: HTTP_STATUS.OK,
       success: true,
       data: {
         cv: shareLink.cvId,
@@ -92,8 +90,6 @@ export const sendCVByEmail = async (
     await shareService.sendCVByEmail(cvId, email);
 
     const response: ApiResponse = {
-            statusCode: HTTP_STATUS.OK,
-      
       success: true,
       data: { message: 'CV sent successfully' },
     };

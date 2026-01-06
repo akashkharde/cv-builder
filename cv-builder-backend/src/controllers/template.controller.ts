@@ -23,13 +23,12 @@ export const getTemplates = async (
   next: NextFunction
 ): Promise<void> => {
   try {
-    const cursor: string | undefined = req.query.cursor as string | undefined;
-    const limit: number | undefined = req.query.limit ? parseInt(req.query.limit as string, 10) : undefined;
+    const cursor = req.query.cursor as string | undefined;
+    const limit = req.query.limit ? parseInt(req.query.limit as string, 10) : undefined;
 
     const result: PaginatedResponse<ITemplate> = await templateService.getTemplates({ cursor, limit });
 
     const response: ApiResponse = {
-      statusCode: HTTP_STATUS.OK,
       success: true,
       data: result,
     };
@@ -55,7 +54,6 @@ export const getTemplateById = async (
     const template: ITemplate = await templateService.getTemplateById(req.params.id);
 
     const response: ApiResponse = {
-      statusCode: HTTP_STATUS.OK,
       success: true,
       data: { template },
     };

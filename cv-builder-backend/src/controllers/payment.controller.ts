@@ -29,7 +29,6 @@ export const getPaymentHistory = async (
     const result: PaginatedResponse<IPayment> = await paymentService.getPaymentHistory(req.user!.userId, { cursor, limit });
 
     const response: ApiResponse = {
-            statusCode: HTTP_STATUS.OK,
       success: true,
       data: result,
     };
@@ -56,7 +55,6 @@ export const createPaymentIntent = async (
     const result: PaymentIntentResponse = await paymentService.createPaymentIntent(req.user!.userId, body);
 
     const response: ApiResponse = {
-      statusCode: HTTP_STATUS.CREATED,
       success: true,
       data: result,
     };
@@ -82,7 +80,6 @@ export const handleWebhook = async (
     await paymentService.handleWebhook(req.body);
 
     const response: ApiResponse = {
-      statusCode: HTTP_STATUS.OK,
       success: true,
       data: { message: 'Webhook processed' },
     };
