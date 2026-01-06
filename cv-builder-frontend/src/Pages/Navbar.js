@@ -16,13 +16,17 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { logoutUser } from "../Redux/features/auth/authThunks";
+import { deleteCV } from "../Redux/features/cv/cvThunks";
+import ConfirmDialog from "../components/ConfirmDialog";
 
 const Navbar = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const { user } = useSelector((state) => state.auth);
+    const { isNewProgress, currentCV } = useSelector((state) => state.cv);
 
     const [anchorEl, setAnchorEl] = useState(null);
+    const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false);
     const open = Boolean(anchorEl);
 
     const handleProfileClick = (event) => {
@@ -37,6 +41,22 @@ const Navbar = () => {
         await dispatch(logoutUser());
         handleClose();
         navigate("/login");
+    };
+
+    const handleLogoClick = () => {
+        if (isNewProgress) {
+            setIsConfirmDialogOpen(true);
+        } else {
+            navigate("/");
+        }
+    };
+
+    const handleConfirmLeave = async () => {
+        if (currentCV) {
+            await dispatch(deleteCV(currentCV._id || currentCV.id));
+        }
+        setIsConfirmDialogOpen(false);
+        navigate("/");
     };
 
     return (
@@ -54,7 +74,7 @@ const Navbar = () => {
                 <Typography
                     variant="h6"
                     className="cursor-pointer"
-                    onClick={() => navigate("/")}
+                    onClick={handleLogoClick}
                 >
                     CV Builder
                 </Typography>
@@ -97,6 +117,15 @@ const Navbar = () => {
                     </Menu>
                 </div>
             </Toolbar>
+            <ConfirmDialog
+                open={isConfirmDialogOpen}
+                title="Lose data?"
+                message="You will lose your unsaved data. Are you sure you want to leave?"
+                onConfirm={handleConfirmLeave}
+                onCancel={() => setIsConfirmDialogOpen(false)}
+                confirmText="Yes, Discard"
+                cancelText="No, Keep Editing"
+            />
         </AppBar>
     );
 };

@@ -20,8 +20,8 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
 import Navbar from "./Navbar";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchCVById, updateCV, autosaveCV } from "../Redux/features/cv/cvThunks";
-import { resetCurrentCV } from "../Redux/slices/cvSlice";
+import { fetchCVById, updateCV, autosaveCV, deleteCV } from "../Redux/features/cv/cvThunks";
+import { resetCurrentCV, setIsNewProgress } from "../Redux/slices/cvSlice";
 import debounce from "lodash/debounce";
 import ModernCVRenderer from "../components/ModernCVRenderer";
 
@@ -337,6 +337,22 @@ const CVEditor = () => {
         }
     };
 
+    /**
+     * Cancel changes and redirect to dashboard.
+     * If it's a new CV (isNewProgress is true), delete it from the database first.
+     */
+    const handleCancel = async () => {
+        if (setIsNewProgress && id) {
+            try {
+                await dispatch(deleteCV(id)).unwrap();
+            } catch (error) {
+                console.error("Failed to delete draft CV on cancel:", error);
+            }
+        }
+        dispatch(setIsNewProgress(false));
+        navigate("/");
+    };
+
     const handleAccordionChange = (panel) => (event, isExpanded) => {
         setExpanded(isExpanded ? panel : false);
     };
@@ -385,6 +401,13 @@ const CVEditor = () => {
                     </div>
 
                     <div className="flex gap-2 items-center">
+                        <Button
+                            variant="outlined"
+                            color="error"
+                            onClick={handleCancel}
+                        >
+                            Cancel
+                        </Button>
                         <Button
                             variant="outlined"
                             onClick={() => {

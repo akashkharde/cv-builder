@@ -1,22 +1,35 @@
+@page {
+    size: auto;
+    margin: 0mm;
+}
+
 @media print {
     .no-print {
         display: none !important;
     }
+
     .navbar {
         display: none !important;
     }
+
+    html,
     body {
+        height: auto !important;
         background-color: white !important;
         margin: 0 !important;
         padding: 0 !important;
     }
+
     .MuiContainer-root {
         max-width: none !important;
         padding: 0 !important;
         margin: 0 !important;
     }
+
     .MuiPaper-root {
         box-shadow: none !important;
         border: none !important;
+        min-height: 0 !important;
+        margin: 0 !important;
     }
 }

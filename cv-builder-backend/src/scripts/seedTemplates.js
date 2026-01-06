@@ -22,7 +22,7 @@ async function run() {
         name: "Classic",
         slug: "classic",
         description: "A classic two-column CV layout with profile on left.",
-        previewImageUrl: "https://cdn-images.zety.com/pages/two-column-resume-ztus-cta-02.webp",
+        previewImageUrl: "https://cdn.enhancv.com/single_minimalist_page_resume_template_1_d1c7925314.png",
         layoutStructure: { columns: 2, left: ["basicDetails", "skills"], right: ["education", "experience", "projects"] },
         defaultTheme: {
           fontFamily: "Inter",
@@ -43,7 +43,7 @@ async function run() {
               fontSizes: { heading: 18, body: 14 },
               colors: { primary: "#2563eb", text: "#111827", background: "#ffffff" },
             },
-            previewImageUrl: "https://cdn-images.zety.com/pages/two-column-resume-ztus-cta-02.webp",
+            previewImageUrl: "https://cdn.enhancv.com/single_minimalist_page_resume_template_1_d1c7925314.png",
             createdAt: now,
           },
         ],

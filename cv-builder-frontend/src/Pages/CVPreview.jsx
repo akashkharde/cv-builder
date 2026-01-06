@@ -48,8 +48,17 @@ const CVPreview = () => {
     };
 
     const triggerDownload = () => {
+        // Set document title to CV name for PDF filename and to remove "React App" header
+        const originalTitle = document.title;
+        document.title = `${cvData.basicDetails.name || "CV"}_Resume`;
+
         // Simple mock download: use browser print to save as PDF
         window.print();
+
+        // Revert title back
+        setTimeout(() => {
+            document.title = originalTitle;
+        }, 1000);
     };
 
     if (loading || !cvData) {

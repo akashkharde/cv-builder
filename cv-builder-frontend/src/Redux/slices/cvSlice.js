@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { fetchCVs, fetchCVById, updateCV, autosaveCV, deleteCV } from "../features/cv/cvThunks";
+import { fetchCVs, fetchCVById, updateCV, autosaveCV, deleteCV, createCV } from "../features/cv/cvThunks";
 
 const initialState = {
     cvs: [],
@@ -7,6 +7,7 @@ const initialState = {
     loading: false,
     error: null,
     saveStatus: 'idle', // idle, saving, saved, error
+    isNewProgress: false,
 };
 
 const cvSlice = createSlice({
@@ -19,6 +20,10 @@ const cvSlice = createSlice({
         resetCurrentCV: (state) => {
             state.currentCV = null;
             state.saveStatus = 'idle';
+            state.isNewProgress = false;
+        },
+        setIsNewProgress: (state, action) => {
+            state.isNewProgress = action.payload;
         }
     },
     extraReducers: (builder) => {
@@ -48,6 +53,13 @@ const cvSlice = createSlice({
             .addCase(fetchCVById.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload;
+            })
+            // Create CV
+            .addCase(createCV.fulfilled, (state, action) => {
+                state.loading = false;
+                state.currentCV = action.payload.data?.cv || action.payload.data || action.payload;
+                state.isNewProgress = true;
+                state.cvs.unshift(state.currentCV);
             })
             // Update CV
             .addCase(updateCV.pending, (state) => {
@@ -92,5 +104,5 @@ const cvSlice = createSlice({
     },
 });
 
-export const { clearErrors, resetCurrentCV } = cvSlice.actions;
+export const { clearErrors, resetCurrentCV, setIsNewProgress } = cvSlice.actions;
 export default cvSlice.reducer;
