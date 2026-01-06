@@ -189,14 +189,6 @@ const Dashboard = () => {
                       </div>
 
                       <div>
-                        <IconButton onClick={() => handleDownload(id)} aria-label="download">
-                          <PictureAsPdfIcon />
-                        </IconButton>
-
-                        <IconButton onClick={() => handleShare(id)} aria-label="share">
-                          <ShareIcon />
-                        </IconButton>
-
                         <IconButton onClick={() => handleDelete(id)} aria-label="delete" color="error">
                           <DeleteIcon />
                         </IconButton>
