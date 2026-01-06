@@ -41,7 +41,7 @@ export class CVRepository {
     params: PaginationParams = {}
   ): Promise<PaginatedResponse<ICV>> {
     const limit = Math.min(params.limit || DEFAULT_PAGINATION.LIMIT, DEFAULT_PAGINATION.MAX_LIMIT);
-    
+
     const query: { userId: string; isDeleted: boolean; _id?: { $lt: string } } = {
       userId,
       isDeleted: false,
@@ -76,7 +76,8 @@ export class CVRepository {
    */
   async create(cvData: Partial<ICV>): Promise<ICV> {
     const cv = new CV(cvData);
-    return cv.save();
+    const savedCV = await cv.save();
+    return this.findById(savedCV._id.toString()) as Promise<ICV>;
   }
 
   /**
@@ -103,7 +104,7 @@ export class CVRepository {
         },
       },
       { new: true, runValidators: true }
-    ).exec();
+    ).populate('layoutId').exec();
 
     if (!cv) {
       throw new NotFoundError('CV');
@@ -129,7 +130,7 @@ export class CVRepository {
         },
       },
       { new: true }
-    ).exec();
+    ).populate('layoutId').exec();
 
     if (!cv) {
       throw new NotFoundError('CV');
@@ -149,7 +150,7 @@ export class CVRepository {
       { _id: cvId, userId, isDeleted: false },
       { $set: { isDeleted: true } },
       { new: true }
-    ).exec();
+    ).populate('layoutId').exec();
 
     if (!cv) {
       throw new NotFoundError('CV');
@@ -182,7 +183,8 @@ export class CVRepository {
     cvData.version = 1;
 
     const newCV = new CV(cvData);
-    return newCV.save();
+    const savedCV = await newCV.save();
+    return this.findById(savedCV._id.toString()) as Promise<ICV>;
   }
 }
 

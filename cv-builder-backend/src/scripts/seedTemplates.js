@@ -54,8 +54,12 @@ async function run() {
         name: "Modern",
         slug: "modern",
         description: "Minimal modern layout with emphasis on experience.",
-        previewImageUrl: "https://cdn.enhancv.com/single_minimalist_page_resume_template_1_d1c7925314.png",
-        layoutStructure: { columns: 1, order: ["basicDetails", "experience", "education", "projects", "skills"], right: [] },
+        previewImageUrl: "https://cdn-images.zety.com/pages/two-column-resume-ztus-cta-02.webp",
+        layoutStructure: {
+          columns: 2,
+          left: ["basicDetails", "skills", "socialProfiles"],
+          right: ["basicDetails", "experience", "education", "projects"]
+        },
         defaultTheme: {
           fontFamily: "Poppins",
           fontSizes: { heading: 20, body: 15 },
@@ -63,19 +67,23 @@ async function run() {
           spacing: { sectionGap: 10 },
         },
         isPremium: true,
-        tags: ["modern", "single-column", "minimal"],
+        tags: ["modern", "two-column", "minimal"],
         assets: [],
         isActive: true,
         versions: [
           {
             versionNumber: 1,
-            layoutStructure: { columns: 1, order: ["basicDetails", "experience", "education", "projects", "skills"], right: [] },
+            layoutStructure: {
+              columns: 2,
+              left: ["basicDetails", "skills", "socialProfiles"],
+              right: ["basicDetails", "experience", "education", "projects"]
+            },
             defaultTheme: {
               fontFamily: "Poppins",
               fontSizes: { heading: 20, body: 15 },
               colors: { primary: "#111827", text: "#1f2937", background: "#fff" },
             },
-            previewImageUrl: "https://cdn.enhancv.com/single_minimalist_page_resume_template_1_d1c7925314.png",
+            previewImageUrl: "https://cdn-images.zety.com/pages/two-column-resume-ztus-cta-02.webp",
             createdAt: now,
           },
         ],

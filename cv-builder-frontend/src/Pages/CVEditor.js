@@ -23,6 +23,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchCVById, updateCV, autosaveCV } from "../Redux/features/cv/cvThunks";
 import { resetCurrentCV } from "../Redux/slices/cvSlice";
 import debounce from "lodash/debounce";
+import ModernCVRenderer from "../components/ModernCVRenderer";
 
 /**
  * Helper: extract a safe string from possible date shapes
@@ -120,7 +121,7 @@ const CVEditor = () => {
                         ...p,
                         // Map backend 'projectTitle' to frontend 'title'
                         projectTitle: p.projectTitle || p.title || "",
-                duration: p.duration || "",
+                        duration: p.duration || "",
                         technologies: safeJoin(p.technologies)
                     })),
                     skills: Array.isArray(data.skills) ? data.skills : [],
@@ -775,130 +776,136 @@ const CVEditor = () => {
                                 Live Preview
                             </Typography>
 
-                            <div className="w-full border p-4 rounded max-h-[60vh] md:max-h-[calc(100vh-200px)] overflow-auto bg-white shadow-inner">
-                                {/* Header / Basic */}
-                                <Box className="text-center mb-6">
-                                    <Typography variant="h4" className="font-bold">
-                                        {formData.data.basicDetails.name || "Your Name"}
-                                    </Typography>
-                                    <Typography variant="body1">
-                                        {formData.data.basicDetails.email || ""}{" "}
-                                        {formData.data.basicDetails.phone ? `| ${formData.data.basicDetails.phone} ` : ""}
-                                    </Typography>
-                                    {formData.data.basicDetails.address && (
-                                        <Typography variant="body2">{formData.data.basicDetails.address}</Typography>
-                                    )}
-                                </Box>
+                            <div className="w-full border rounded max-h-[60vh] md:max-h-[calc(100vh-200px)] overflow-auto bg-white shadow-inner">
+                                {currentCV?.layoutId?.slug === 'modern' || currentCV?.layoutId?.columns === 2 ? (
+                                    <ModernCVRenderer cvData={formData.data} />
+                                ) : (
+                                    <div className="p-4">
+                                        {/* Header / Basic */}
+                                        <Box className="text-center mb-6">
+                                            <Typography variant="h4" className="font-bold">
+                                                {formData.data.basicDetails.name || "Your Name"}
+                                            </Typography>
+                                            <Typography variant="body1">
+                                                {formData.data.basicDetails.email || ""}{" "}
+                                                {formData.data.basicDetails.phone ? `| ${formData.data.basicDetails.phone} ` : ""}
+                                            </Typography>
+                                            {formData.data.basicDetails.address && (
+                                                <Typography variant="body2">{formData.data.basicDetails.address}</Typography>
+                                            )}
+                                        </Box>
 
-                                {/* Summary */}
-                                {formData.data.basicDetails.introductoryParagraph && (
-                                    <div className="mb-6">
-                                        <Typography variant="h6" className="border-b mb-2">
-                                            Summary
-                                        </Typography>
-                                        <Typography variant="body2">{formData.data.basicDetails.introductoryParagraph}</Typography>
-                                    </div>
-                                )}
-
-                                {/* Experience */}
-                                {formData.data.experience && formData.data.experience.length > 0 && (
-                                    <div className="mb-6">
-                                        <Typography variant="h6" className="border-b mb-2">
-                                            Experience
-                                        </Typography>
-                                        {formData.data.experience.map((exp, i) => (
-                                            <div key={i} className="mb-4">
-                                                <Typography variant="subtitle1" className="font-bold">
-                                                    {exp.position || "Position"}
+                                        {/* Summary */}
+                                        {formData.data.basicDetails.introductoryParagraph && (
+                                            <div className="mb-6">
+                                                <Typography variant="h6" className="border-b mb-2">
+                                                    Summary
                                                 </Typography>
-                                                <Typography variant="subtitle2">
-                                                    {exp.organizationName || ""} {exp.duration ? `| ${exp.duration} ` : ""}
-                                                </Typography>
+                                                <Typography variant="body2">{formData.data.basicDetails.introductoryParagraph}</Typography>
                                             </div>
-                                        ))}
-                                    </div>
-                                )}
+                                        )}
 
-                                {/* Education */}
-                                {formData.data.education && formData.data.education.length > 0 && (
-                                    <div className="mb-6">
-                                        <Typography variant="h6" className="border-b mb-2">
-                                            Education
-                                        </Typography>
-                                        {formData.data.education.map((edu, i) => (
-                                            <div key={i} className="mb-4">
-                                                <Typography variant="subtitle1" className="font-bold">
-                                                    {edu.institution || "Institution"}
+                                        {/* Experience */}
+                                        {formData.data.experience && formData.data.experience.length > 0 && (
+                                            <div className="mb-6">
+                                                <Typography variant="h6" className="border-b mb-2">
+                                                    Experience
                                                 </Typography>
-                                                <Typography variant="subtitle2">{edu.degreeName || ""}</Typography>
-                                                {edu.endDate && <Typography variant="body2">{edu.endDate}</Typography>}
+                                                {formData.data.experience.map((exp, i) => (
+                                                    <div key={i} className="mb-4">
+                                                        <Typography variant="subtitle1" className="font-bold">
+                                                            {exp.position || "Position"}
+                                                        </Typography>
+                                                        <Typography variant="subtitle2">
+                                                            {exp.organizationName || ""} {exp.duration ? `| ${exp.duration} ` : ""}
+                                                        </Typography>
+                                                    </div>
+                                                ))}
                                             </div>
-                                        ))}
-                                    </div>
-                                )}
+                                        )}
 
-                                {/* Projects */}
-                                {formData.data.projects && formData.data.projects.length > 0 && (
-                                    <div className="mb-6">
-                                        <Typography variant="h6" className="border-b mb-2">
-                                            Projects
-                                        </Typography>
-                                        {formData.data.projects.map((p, i) => (
-                                            <div key={i} className="mb-4">
-                                                <Typography variant="subtitle1" className="font-bold">
-                                                    {p.projectTitle || "Project Title"}
+                                        {/* Education */}
+                                        {formData.data.education && formData.data.education.length > 0 && (
+                                            <div className="mb-6">
+                                                <Typography variant="h6" className="border-b mb-2">
+                                                    Education
                                                 </Typography>
-                                                <Typography variant="subtitle2">
-                                                    {p.technologies ? p.technologies : ""}
-                                                    {p.duration ? ` | ${p.duration} ` : ""}
-                                                </Typography>
-                                                {p.description && <Typography variant="body2">{p.description}</Typography>}
+                                                {formData.data.education.map((edu, i) => (
+                                                    <div key={i} className="mb-4">
+                                                        <Typography variant="subtitle1" className="font-bold">
+                                                            {edu.institution || "Institution"}
+                                                        </Typography>
+                                                        <Typography variant="subtitle2">{edu.degreeName || ""}</Typography>
+                                                        {edu.endDate && <Typography variant="body2">{edu.endDate}</Typography>}
+                                                    </div>
+                                                ))}
                                             </div>
-                                        ))}
-                                    </div>
-                                )}
+                                        )}
 
-                                {/* Skills */}
-                                {formData.data.skills && formData.data.skills.length > 0 && (
-                                    <div className="mb-6">
-                                        <Typography variant="h6" className="border-b mb-2">
-                                            Skills
-                                        </Typography>
-                                        <div className="flex flex-wrap gap-2">
-                                            {formData.data.skills.map((skill, i) => (
-                                                <span key={i} className="bg-gray-200 px-2 py-1 rounded text-sm">
-                                                    {skill.skillName}
-                                                </span>
-                                            ))}
-                                        </div>
-                                    </div>
-                                )}
+                                        {/* Projects */}
+                                        {formData.data.projects && formData.data.projects.length > 0 && (
+                                            <div className="mb-6">
+                                                <Typography variant="h6" className="border-b mb-2">
+                                                    Projects
+                                                </Typography>
+                                                {formData.data.projects.map((p, i) => (
+                                                    <div key={i} className="mb-4">
+                                                        <Typography variant="subtitle1" className="font-bold">
+                                                            {p.projectTitle || "Project Title"}
+                                                        </Typography>
+                                                        <Typography variant="subtitle2">
+                                                            {p.technologies ? p.technologies : ""}
+                                                            {p.duration ? ` | ${p.duration} ` : ""}
+                                                        </Typography>
+                                                        {p.description && <Typography variant="body2">{p.description}</Typography>}
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        )}
 
-                                {/* Social Profiles */}
-                                {formData.data.socialProfiles && formData.data.socialProfiles.length > 0 && (
-                                    <div className="mb-6">
-                                        <Typography variant="h6" className="border-b mb-2">
-                                            Social Profiles
-                                        </Typography>
-                                        <div className="flex flex-wrap gap-4">
-                                            {formData.data.socialProfiles.map((profile, i) => (
-                                                <div key={i} className="flex flex-col">
-                                                    <Typography variant="subtitle2" className="font-bold">
-                                                        {profile.platformName}
-                                                    </Typography>
-                                                    {profile.profileLink && (
-                                                        <a
-                                                            href={profile.profileLink}
-                                                            target="_blank"
-                                                            rel="noopener noreferrer"
-                                                            className="text-blue-600 text-sm hover:underline"
-                                                        >
-                                                            {profile.profileLink}
-                                                        </a>
-                                                    )}
+                                        {/* Skills */}
+                                        {formData.data.skills && formData.data.skills.length > 0 && (
+                                            <div className="mb-6">
+                                                <Typography variant="h6" className="border-b mb-2">
+                                                    Skills
+                                                </Typography>
+                                                <div className="flex flex-wrap gap-2">
+                                                    {formData.data.skills.map((skill, i) => (
+                                                        <span key={i} className="bg-gray-200 px-2 py-1 rounded text-sm">
+                                                            {skill.skillName}
+                                                        </span>
+                                                    ))}
                                                 </div>
-                                            ))}
-                                        </div>
+                                            </div>
+                                        )}
+
+                                        {/* Social Profiles */}
+                                        {formData.data.socialProfiles && formData.data.socialProfiles.length > 0 && (
+                                            <div className="mb-6">
+                                                <Typography variant="h6" className="border-b mb-2">
+                                                    Social Profiles
+                                                </Typography>
+                                                <div className="flex flex-wrap gap-4">
+                                                    {formData.data.socialProfiles.map((profile, i) => (
+                                                        <div key={i} className="flex flex-col">
+                                                            <Typography variant="subtitle2" className="font-bold">
+                                                                {profile.platformName}
+                                                            </Typography>
+                                                            {profile.profileLink && (
+                                                                <a
+                                                                    href={profile.profileLink}
+                                                                    target="_blank"
+                                                                    rel="noopener noreferrer"
+                                                                    className="text-blue-600 text-sm hover:underline"
+                                                                >
+                                                                    {profile.profileLink}
+                                                                </a>
+                                                            )}
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        )}
                                     </div>
                                 )}
                             </div>
