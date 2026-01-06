@@ -13,12 +13,15 @@ import DownloadIcon from "@mui/icons-material/Download";
 import Navbar from "./Navbar";
 import { fetchCVById } from "../Redux/features/cv/cvThunks";
 import ModernCVRenderer from "../components/ModernCVRenderer";
+import PaymentModal from "../components/PaymentModal";
+import "./CVPreview.css";
 
 const CVPreview = () => {
     const { id } = useParams();
     const dispatch = useDispatch();
     const { currentCV, loading } = useSelector((state) => state.cv);
     const [cvData, setCvData] = useState(null);
+    const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
 
     useEffect(() => {
         if (id) {
@@ -41,7 +44,12 @@ const CVPreview = () => {
     }, [currentCV]);
 
     const handleDownload = () => {
-        alert(`Payment required to download CV: ${id}`);
+        setIsPaymentModalOpen(true);
+    };
+
+    const triggerDownload = () => {
+        // Simple mock download: use browser print to save as PDF
+        window.print();
     };
 
     if (loading || !cvData) {
@@ -59,7 +67,7 @@ const CVPreview = () => {
         <>
             <Navbar />
             <Container maxWidth="md" className="py-8">
-                <Box className="flex justify-between items-center mb-6">
+                <Box className="flex justify-between items-center mb-6 no-print">
                     <Typography variant="h4" component="h1">
                         CV Preview
                     </Typography>
@@ -204,6 +212,14 @@ const CVPreview = () => {
                         )}
                     </Paper>
                 )}
+
+                <div className="no-print">
+                    <PaymentModal
+                        open={isPaymentModalOpen}
+                        onClose={() => setIsPaymentModalOpen(false)}
+                        onSuccess={triggerDownload}
+                    />
+                </div>
             </Container>
         </>
     );
