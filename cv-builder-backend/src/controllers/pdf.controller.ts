@@ -35,7 +35,6 @@ export const generatePDF = async (
     });
 
     const response: ApiResponse = {
-      statusCode: HTTP_STATUS.CREATED,
       success: true,
       data: { jobId: job._id.toString() },
     };
@@ -61,7 +60,6 @@ export const getJobStatus = async (
     const job: IPDFJob = await pdfService.getJobStatus(req.params.jobId, req.user!.userId);
 
     const response: ApiResponse = {
-      statusCode: HTTP_STATUS.OK,
       success: true,
       data: { job },
     };

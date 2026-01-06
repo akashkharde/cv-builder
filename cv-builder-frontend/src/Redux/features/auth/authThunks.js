@@ -1,6 +1,5 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { getMeAPI, registerAPI } from "./authAPI";
-import { loginAPI } from "./authAPI";
+import { getMeAPI, registerAPI, loginAPI, logoutAPI } from "./authAPI";
 
 
 export const registerUser = createAsyncThunk(
@@ -44,6 +43,17 @@ export const checkAuth = createAsyncThunk(
       return await getMeAPI();
     } catch {
       return rejectWithValue(null);
+    }
+  }
+);
+
+export const logoutUser = createAsyncThunk(
+  "auth/logout",
+  async (_, { rejectWithValue }) => {
+    try {
+      return await logoutAPI();
+    } catch (error) {
+      return rejectWithValue(error?.response?.data?.message || "Logout failed");
     }
   }
 );

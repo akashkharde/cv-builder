@@ -19,7 +19,6 @@ export interface AuthRequest extends Request {
  * Standard API Response structure
  */
 export interface ApiResponse<T = unknown> {
-  statusCode: number;
   success: boolean;
   data?: T;
   error?: {

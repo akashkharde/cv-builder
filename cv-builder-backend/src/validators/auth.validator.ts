@@ -12,10 +12,12 @@ export const registerSchema = Joi.object({
   username: Joi.string()
     .min(3)
     .max(30)
+    .alphanum()
     .required()
     .messages({
       'string.min': 'Username must be at least 3 characters',
       'string.max': 'Username must be at most 30 characters',
+      'string.alphanum': 'Username must contain only alphanumeric characters',
       'any.required': 'Username is required',
     }),
   email: Joi.string()

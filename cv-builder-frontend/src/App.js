@@ -9,11 +9,14 @@ import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { checkAuth } from "./Redux/features/auth/authThunks";
 import Dashboard from "./Pages/Dashboard";
-import Navbar from "./Pages/Navbar";
+
+import TemplateSelection from "./Pages/TemplateSelection";
+import CVEditor from "./Pages/CVEditor";
+import CVPreview from "./Pages/CVPreview";
 
 
 function App() {
-    const dispatch = useDispatch();
+  const dispatch = useDispatch();
   const { authChecked } = useSelector((state) => state.auth);
 
   useEffect(() => {
@@ -38,6 +41,9 @@ function App() {
       {/* Protected routes */}
       <Route element={<ProtectedRoute />}>
         <Route path="/" element={<Dashboard />} />
+        <Route path="/templates" element={<TemplateSelection />} />
+        <Route path="/editor/:id" element={<CVEditor />} />
+        <Route path="/preview/:id" element={<CVPreview />} />
       </Route>
 
 

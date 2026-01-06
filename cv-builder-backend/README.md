@@ -54,13 +54,13 @@ src/
 2. **Environment Variables**
    Create a `.env` file in the root directory:
    ```env
-   PORT=8000
+   PORT=3000
    NODE_ENV=development
    MONGODB_URI=mongodb://localhost:27017/cv-builder
    JWT_SECRET=your-super-secret-jwt-key
    JWT_ACCESS_EXPIRY=15m
    JWT_REFRESH_EXPIRY=30d
-   FRONTEND_URL=http://localhost:3000
+   FRONTEND_URL=http://localhost:3001
    ```
    
    **Note:** Node.js 24+ has native support for `.env` files. The `start` script uses `--env-file=.env` flag automatically.
@@ -84,7 +84,7 @@ src/
 ## API Documentation
 
 Once the server is running, access Swagger documentation at:
-- **Swagger UI**: http://localhost:8000/api-docs
+- **Swagger UI**: http://localhost:3000/api-docs
 
 ## API Endpoints
 
@@ -170,7 +170,3 @@ Consistent error response format:
 
 ISC
 
-
-
-
-eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OTU3NGY5MzZmNjM0Nzk1ZjU5OTkwOTUiLCJlbWFpbCI6InVzZXIxMjNAZXhhbXBsZS5jb20iLCJ1c2VybmFtZSI6IkFrYXNoIiwiaWF0IjoxNzY3MzMyODg1LCJleHAiOjE3NjczMzM3ODV9.aYb2sKRaCloF1D8BKxi4Id6nODNUhQSvbKGue_b0hSs

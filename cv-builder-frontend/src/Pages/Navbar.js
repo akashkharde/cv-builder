@@ -15,7 +15,7 @@ import LogoutIcon from "@mui/icons-material/Logout";
 
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { logout } from "../Redux/slices/authSlice";
+import { logoutUser } from "../Redux/features/auth/authThunks";
 
 const Navbar = () => {
     const dispatch = useDispatch();
@@ -33,15 +33,15 @@ const Navbar = () => {
         setAnchorEl(null);
     };
 
-    const handleLogout = () => {
-        dispatch(logout());
+    const handleLogout = async () => {
+        await dispatch(logoutUser());
         handleClose();
         navigate("/login");
     };
 
     return (
         <AppBar
-            position="static"
+            position="sticky"
             color="default"
             elevation={1}
             sx={{
@@ -61,15 +61,6 @@ const Navbar = () => {
 
                 {/* Right actions */}
                 <div className="flex items-center gap-2 md:gap-4">
-                    <Button
-                        variant="contained"
-                        startIcon={<AddIcon />}
-                        onClick={() => navigate("/editor/new")}
-                        className="hidden sm:flex"
-                    >
-                        Create CV
-                    </Button>
-
                     <IconButton
                         color="primary"
                         className="sm:hidden"

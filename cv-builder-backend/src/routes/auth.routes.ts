@@ -63,12 +63,12 @@ router.post('/register', authLimiter, validate(registerSchema), authController.r
  *           schema:
  *             type: object
  *             required:
- *               - username
+ *               - identifier
  *               - password
  *             properties:
- *               username:
+ *               identifier:
  *                 type: string
- *                 description: Username or email
+ *                 description: Email or username
  *               password:
  *                 type: string
  *     responses:

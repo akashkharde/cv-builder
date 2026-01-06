@@ -18,7 +18,7 @@ import shareRoutes from './routes/share.routes';
 
 
 const app: Express = express();
-const PORT = process.env.PORT || 8000;
+const PORT = process.env.PORT || 3000;
 
 // Security middleware
 configureSecurity(app);

@@ -39,6 +39,7 @@ export interface Experience {
   ctc?: string;
   joiningDate?: Date;
   leavingDate?: Date;
+  duration?: string;
   technologies?: string[];
   description?: string;
 }

@@ -27,7 +27,6 @@ export const errorHandler = (
   // Handle known operational errors
   if (err instanceof AppError) {
     const response: ApiResponse = {
-      statusCode: err.statusCode,
       success: false,
       error: {
         code: err.code,
@@ -42,7 +41,6 @@ export const errorHandler = (
 
   const response: ApiResponse = {
     success: false,
-      statusCode: HTTP_STATUS.INTERNAL_SERVER_ERROR,
     error: {
       code: 'INTERNAL_ERROR',
       message: process.env.NODE_ENV === 'production' 
