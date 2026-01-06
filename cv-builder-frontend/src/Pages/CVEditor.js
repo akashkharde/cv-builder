@@ -184,8 +184,22 @@ const CVEditor = () => {
             return [];
         };
 
+        const normalizeUrl = (url) => {
+            if (!url) return url;
+            const trimmed = url.trim();
+            if (!trimmed) return "";
+            if (trimmed.startsWith("http://") || trimmed.startsWith("https://") || trimmed.startsWith("mailto:") || trimmed.startsWith("tel:")) {
+                return trimmed;
+            }
+            return `https://${trimmed}`;
+        };
+
         return {
             ...data,
+            basicDetails: {
+                ...data.basicDetails,
+                image: normalizeUrl(data.basicDetails?.image)
+            },
             projects: (data.projects || []).map(p => ({
                 ...p,
                 projectTitle: p.projectTitle, // backend expects projectTitle
@@ -195,6 +209,10 @@ const CVEditor = () => {
                 ...e,
                 duration: e.duration || "",
                 technologies: safeSplit(e.technologies)
+            })),
+            socialProfiles: (data.socialProfiles || []).map(sp => ({
+                ...sp,
+                profileLink: normalizeUrl(sp.profileLink)
             }))
         };
     };

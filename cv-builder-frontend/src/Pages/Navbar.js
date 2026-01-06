@@ -64,6 +64,7 @@ const Navbar = () => {
             position="sticky"
             color="default"
             elevation={1}
+            className="no-print"
             sx={{
                 backgroundColor: "rgb(var(--color-primary))",
                 color: "#fff",
